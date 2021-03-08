@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-3.4.1.js"></script>
+</head>
+<body>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Contact Title</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Region</th>
+                </tr>
+            </thead>
+            <tbody id="supplierTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(function () {
+            if (sessionStorage.getItem('access_token') != null) {
+                $.ajax({
+                    method: 'Get',
+                    url: '/api/suppliers',
+                    dataType: 'json',
+                    headers: { "Authorization": "Bearer " + sessionStorage.getItem('access_token') },
+                    success: function (data) {
+                        console.log(data)
+                        GetSuppliers(data);
+                    }
+                })
+
+
+                function GetSuppliers(data) {
+                    $.each(data, function (key, value) {
+                        $("#supplierTable").append(`
+                       <tr><td>${value.CompanyName}</td><td>${value.ContactName}</td><td>${value.ContactTitle}</td><td>${value.Adress}</td>                  <td>${value.City}</td><td>${value.Region}</td></tr>
+`)
+                    })
+                }
+            }
+            else {
+                window.location.href = "/Pages/login.html"
+            }
+
+        })
+    </script>
+
+</body>
+</html>
